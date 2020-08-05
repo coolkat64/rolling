@@ -1,3 +1,7 @@
+# This file is meant to define the most important parameters of the game
+# such as the action points per turn, the length of days, etc.. 
+# along with the skills, crafting and meterial system.
+
 action_points_per_turn = 24
 create_character_event_title = "You wake up on a beach"
 create_character_event_story_image = "beach_intro.png"

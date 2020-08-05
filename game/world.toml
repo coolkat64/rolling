@@ -1,3 +1,6 @@
+# This file defines the world of the game like the ecosystem, 
+# the repartition of biomes, drops, etc..
+
 [ZONE_PROPERTIES]
   [ZONE_PROPERTIES.BEACH]
     move_cost = 4.0
