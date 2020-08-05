@@ -1,4 +1,10 @@
 # coding: utf-8
+
+# This file defines the kernel class which is a hub of many data structures 
+# throughout the code.
+# It mainly defines and centralizes properties such as librairies of data 
+# or the map; handles web sockets and requests; initialises the game (?).
+
 from asyncio import AbstractEventLoop
 import datetime
 import glob

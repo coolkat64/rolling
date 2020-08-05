@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# Basically the Utils file containing numerous helper functions and classes. 
+
 import dataclasses
 import enum
 import typing
@@ -23,6 +26,7 @@ class EmptyModel:
 
 
 def get_on_and_around_coordinates(x: int, y: int) -> typing.List[typing.Tuple[int, int]]:
+    '''Returns a list of coordinates tuples mapping all around the position.'''
     return [
         (x, y),
         (x - 1, y - 1),
@@ -39,6 +43,7 @@ def get_on_and_around_coordinates(x: int, y: int) -> typing.List[typing.Tuple[in
 def is_there_resource_id_in_zone(
     kernel: "Kernel", resource_id: str, zone_source: "ZoneMapSource"
 ) -> bool:
+    '''Returns a True value if this ressources is in the zone, else False.'''
     for row in zone_source.geography.rows:
         for zone_tile_type in row:
             zone_tile_type = typing.cast(typing.Type[ZoneMapTileType], zone_tile_type)
@@ -59,6 +64,9 @@ def is_there_resource_id_in_zone(
 def get_stuffs_filled_with_resource_id(
     kernel: "Kernel", character_id: str, resource_id: str
 ) -> typing.Iterator["StuffModel"]:
+    '''Returns what stuff is filled with the ressource in the character's inventory.
+    /!\ It's a generator. 
+    '''
     from rolling.server.lib.stuff import StuffLib
 
     stuff_lib = StuffLib(kernel=kernel)
@@ -70,6 +78,9 @@ def get_stuffs_filled_with_resource_id(
 
 
 def get_stuffs_eatable(kernel: "Kernel", character_id: str) -> typing.Iterator["StuffModel"]:
+    '''Returns what is eatable in the character's inventory.
+    /!\ It's a generator.
+    '''
     for stuff in kernel.stuff_lib.get_carried_by(character_id):
         stuff_properties = kernel.game.stuff_manager.get_stuff_properties_by_id(stuff.stuff_id)
         for description in stuff_properties.descriptions:
@@ -78,6 +89,8 @@ def get_stuffs_eatable(kernel: "Kernel", character_id: str) -> typing.Iterator["
 
 
 class CornerEnum(enum.Enum):
+    '''Enumeration of various corners.'''
+
     TOP = "TOP"
     TOP_RIGHT = "TOP_RIGHT"
     RIGHT = "RIGHT"
@@ -89,6 +102,8 @@ class CornerEnum(enum.Enum):
 
 
 def get_opposite_zone_place(from_: CornerEnum, zone_width: int, zone_height: int) -> (int, int):
+    '''Returns the opposite coordinates from a corner and the height/width of the zone.'''
+
     width_part_len = zone_width // 3
     half_width_part_len = width_part_len // 2
     height_part_len = zone_height // 3
@@ -127,6 +142,8 @@ def get_opposite_zone_place(from_: CornerEnum, zone_width: int, zone_height: int
 def get_coming_from(
     before_row_i: int, before_col_i: int, after_row_i: int, after_col_i: int
 ) -> CornerEnum:
+    '''Returns from which corner whatever is coming from based on the coordinates of its movement.'''
+
     if after_row_i == before_row_i - 1 and after_col_i == before_col_i:
         return CornerEnum.BOTTOM
 
@@ -157,6 +174,8 @@ def get_coming_from(
 def get_corner(
     width: int, height: int, new_row_i: int, new_col_i: int
 ) -> typing.Optional[CornerEnum]:
+    '''Returns a corner from the definition of a zone and a position.'''
+
     left_col_i_end = width // 3
     right_col_i_start = (width // 3) * 2
     top_row_i_end = height // 3
@@ -204,6 +223,8 @@ def get_corner(
 def filter_action_links(
     links: typing.List[CharacterActionLink]
 ) -> typing.List[CharacterActionLink]:
+    ''' '''
+
     new_links: typing.List[CharacterActionLink] = []
     found_merge_type: typing.List[typing.Any] = []
 
@@ -219,12 +240,14 @@ def filter_action_links(
 
 
 def display_g_or_kg(grams: float) -> str:
+    '''Converts grams into kg (as a str).'''
     if grams < 1000:
         return f"{grams} g"
     return f"{round(grams/1000, 3)} kg"
 
 
 def quantity_to_str(quantity: float, unit: Unit, kernel: "Kernel") -> str:
+    '''Converts a quantity to a string from the number, a unit and a kernel (for translation).'''
     if unit == Unit.GRAM:
         return display_g_or_kg(quantity)
     unit_str = kernel.translation.get(unit)
@@ -235,6 +258,7 @@ def quantity_to_str(quantity: float, unit: Unit, kernel: "Kernel") -> str:
 def get_description_for_not_enough_ap(
     character: "CharacterModel", cost: float, can_be_back_url: bool = False
 ) -> Description:
+    '''Returns a description of why an action is too costly for a given character.'''
     return Description(
         title="Action impossible",
         items=[
@@ -250,6 +274,7 @@ def get_description_for_not_enough_ap(
 
 # FIXME BS: replace by iterator on eatable object (to manage all case like invent friends)
 def character_can_drink_in_its_zone(kernel: "Kernel", character: "CharacterModel") -> bool:
+    '''Returns a boolean weither a given character can drink within an area or not.'''
     # TODO: consider path finding
     zone_source = kernel.tile_maps_by_position[
         (character.world_row_i, character.world_col_i)
@@ -262,6 +287,7 @@ def character_can_drink_in_its_zone(kernel: "Kernel", character: "CharacterModel
 def get_character_stuff_filled_with_water(
     kernel: "Kernel", character_id: str
 ) -> typing.Optional["StuffModel"]:
+    '''Tries to fill all containers '''
     try:
         return next(
             get_stuffs_filled_with_resource_id(

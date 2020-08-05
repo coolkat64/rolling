@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# This file defines the Physics class which determines where players can go.
+
 import typing
 
 from rolling.exception import MoveToOtherZoneError
@@ -12,12 +15,19 @@ if typing.TYPE_CHECKING:
 
 
 class Physics:
+    '''Defines where players can go.
+    It is initiated with a controller and a map. 
+    '''
+    
     def __init__(self, controller: "Controller", zone_map_source: ZoneMapSource) -> None:
         self._kernel = controller.kernel
         self._controller = controller
         self._zone_map_source = zone_map_source
 
     def player_can_move_at(self, player: CharacterModel, position: typing.Tuple[int, int]) -> bool:
+        '''Takes as input a player and a position to go to and determines if he can access this position.
+        Returns a boolean.
+        '''
         row_i = position[0]
         col_i = position[1]
 

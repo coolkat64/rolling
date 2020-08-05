@@ -1,5 +1,8 @@
 # coding: utf-8
 
+# This file contains the data classes to contain data which
+# will be used by the GUI.
+
 import dataclasses
 import enum
 import typing

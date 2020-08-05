@@ -1,4 +1,8 @@
 # coding: utf-8
+
+# This file defines a GlobalTranslation object which maps hard-wired 
+# concepts of the game to translations. 
+
 import typing
 
 from rolling.model.measure import Unit

@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# This file contains the classes of exception handled in runtime.
+
 import typing
 
 from requests import Response

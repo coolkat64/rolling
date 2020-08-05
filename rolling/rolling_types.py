@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# This file defines enumeration objects
+
 import enum
 
 

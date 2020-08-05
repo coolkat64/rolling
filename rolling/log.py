@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# This file defines the logging system of the game. 
+
 import logging
 import sys
 
@@ -29,8 +32,7 @@ kernel_logger.addHandler(_stdout_handler)
 
 
 def configure_logging(log_level: int) -> None:
-    """
-    Set logging level of current applications
+    """Set logging level of current applications
     :param log_level: a logging.XXXX level
     """
     server_logger.setLevel(log_level)
